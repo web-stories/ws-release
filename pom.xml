@@ -1,0 +1,18 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.webstories.release</groupId>
+  <artifactId>Release</artifactId>
+  <version>0.0.0-SNAPSHOT</version>
+  <scm>
+    <url>https://github.com/web-stories/release</url>
+    <connection>https://github.com/web-stories/release.git</connection>
+    <developerConnection>scm:git:git@github.com:web-stories/release.git</developerConnection>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-exec</artifactId>
+      <version>1.3</version>
+    </dependency>
+  </dependencies>
+</project>
