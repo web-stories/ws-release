@@ -1,1 +1,2 @@
+Note: MANIFEST.MF should ALWAYS end with a new line
 Main-Class: com.webstories.release.Main
