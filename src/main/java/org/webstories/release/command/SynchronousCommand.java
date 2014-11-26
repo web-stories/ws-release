@@ -7,8 +7,12 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.webstories.release.utils.ArrayUtils;
 
 public abstract class SynchronousCommand {
+	private Logger logger = LoggerFactory.getLogger( SynchronousCommand.class );
 	protected class CommandResult {
 		private int exitCode;
 		private List<String> lines;
@@ -47,9 +51,14 @@ public abstract class SynchronousCommand {
 		executor.setStreamHandler( new PumpStreamHandler( stdout, System.err, System.in ) );
 		
 		try {
-			executor.execute( command, resultHandler );
 			
+			debugCommand( "Executing command '{}'", name, arguments );
+			
+			executor.execute( command, resultHandler );
 			resultHandler.waitFor();
+			
+			debugCommand( "Command '{}' executed", name, arguments );
+			
 			int exitCode = resultHandler.getExitValue();
 			List<String> lines = stdout.getLines();
 			
@@ -61,5 +70,11 @@ public abstract class SynchronousCommand {
 		} catch ( IOException | InterruptedException e ) {
 			throw new CommandException( e );
 		}
+	}
+	
+	private void debugCommand( String msg, String commandName, String[] args ) {
+		String command = commandName + " " + ArrayUtils.join( args , " " );
+		msg = msg.replace( "{}", command );
+		logger.debug( msg );
 	}
 }
