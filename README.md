@@ -7,7 +7,6 @@ Web Stories release process.
 The following dependencies are required to be installed and accessible in the command line when executing this release process:
 
 * [Maven](http://maven.apache.org/download.cgi)
-* [git](http://git-scm.com/downloads)
 
 ## What does it do?
 
