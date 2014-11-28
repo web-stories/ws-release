@@ -7,7 +7,13 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
 
-public abstract class SynchronousCommand {
+public class SynchronousCommand {
+	private String name;
+	
+	protected SynchronousCommand( String name ) {
+		this.name = name;
+	}
+	
 	protected class CommandResult {
 		private int exitCode;
 		private List<String> lines;
@@ -32,9 +38,12 @@ public abstract class SynchronousCommand {
 			return lines;
 		}
 	}
-	protected CommandResult executeCommand( String name, String[] arguments )
+	
+	protected CommandResult execute( String... arguments )
 	throws CommandException {
-		CommandLine command = new CommandLine( name );
+		CommandLine command = new CommandLine( "cmd" );
+		command.addArgument( "/c" );
+		command.addArgument( name );
 		
 		for ( String argument : arguments ) {
 			command.addArgument( argument );
