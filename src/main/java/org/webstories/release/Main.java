@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.webstories.release.command.BuildTasks;
-import org.webstories.release.command.CommandException;
+import org.webstories.release.build.BuildTasks;
+import org.webstories.release.build.CommandException;
 import org.webstories.release.git.GitCommands;
 import org.webstories.release.git.GitException;
 import org.webstories.release.utils.ConfigsStreamReader;
@@ -16,7 +16,10 @@ import org.webstories.release.utils.Logger;
 
 public class Main {
 	public static void main( String[] args ) {
+		ReleaseArguments arguments = new ReleaseArguments( args );
+		
 		try {
+			String jbossHome = arguments.getValue( "jboss" );
 			String password = getConfig( "ssh.password" );
 			GitCommands commands = GitCommands.create( password );
 			BuildTasks buildTasks = new BuildTasks();
@@ -35,7 +38,8 @@ public class Main {
 			// TODO
 			
 			Logger.task( "All done!" );
-		} catch ( ReleaseException | GitException | CommandException e ) {
+		} catch ( ReleaseException | GitException | CommandException |
+		ArgumentNotFoundException e ) {
 			System.out.println( e.getMessage() );
 		}
 	}

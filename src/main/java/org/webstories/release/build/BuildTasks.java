@@ -1,4 +1,4 @@
-package org.webstories.release.command;
+package org.webstories.release.build;
 
 
 public class BuildTasks {
