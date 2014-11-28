@@ -1,4 +1,4 @@
-package org.webstories.utils;
+package org.webstories.release.utils;
 
 public class InputStreamException extends Exception {
 	private static final long serialVersionUID = 1;

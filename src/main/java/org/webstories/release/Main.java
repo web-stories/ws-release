@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.webstories.release.git.CommandException;
 import org.webstories.release.git.GitCommands;
-import org.webstories.utils.ConfigsStreamReader;
-import org.webstories.utils.InputStreamAction;
-import org.webstories.utils.InputStreamException;
+import org.webstories.release.utils.ConfigsStreamReader;
+import org.webstories.release.utils.InputStreamAction;
+import org.webstories.release.utils.InputStreamException;
 
 
 public class Main {

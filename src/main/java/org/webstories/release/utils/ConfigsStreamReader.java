@@ -1,4 +1,4 @@
-package org.webstories.utils;
+package org.webstories.release.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
