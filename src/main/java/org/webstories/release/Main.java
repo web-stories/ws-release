@@ -27,8 +27,10 @@ public class Main {
 			
 			String password = getConfig( "ssh.password" );
 			GitCommands commands = GitCommands.create( password );
-			BuildTasks buildTasks = new BuildTasks();
-			ServerTasks serverTasks = new ServerTasks( new File( arguments.getValue( "jboss" ) ) );
+			BuildTasks buildTasks = BuildTasks.create();
+			ServerTasks serverTasks = ServerTasks.create(
+				new File( arguments.getValue( "jboss" ) )
+			);
 			
 			Logger.task( "Checking if current branch is 'master'..." );
 			if( !commands.isBranch( "master" ) ) {

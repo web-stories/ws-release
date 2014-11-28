@@ -5,8 +5,12 @@ import java.io.File;
 public class ServerTasks {
 	private File jbossHome;
 	
-	public ServerTasks( File jbossHome ) {
+	private ServerTasks( File jbossHome ) {
 		this.jbossHome = jbossHome;
+	}
+	
+	public static ServerTasks create( File jbossHome ) {
+		return new ServerTasks( jbossHome );
 	}
 	
 	/**
