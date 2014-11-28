@@ -76,23 +76,23 @@ public class GitCommands {
 		SshSessionFactory.setInstance( sessionFactory );
 	}
 	
-	public boolean isBranch( String name ) throws CommandException {
+	public boolean isBranch( String name ) throws GitException {
 		try {
 			String currentBranchName = git.getRepository().getFullBranch();
 			return ( "refs/heads/" + name ).equals( currentBranchName );
 		} catch ( IOException e ) {
-			throw new CommandException( e );
+			throw new GitException( e );
 		}
 	}
 	
-	public void update() throws CommandException {
+	public void update() throws GitException {
 		try {
 			PullResult result = git.pull().call();
 			if ( !result.isSuccessful() ) {
-				throw new CommandException( "Failed to pull changes" );
+				throw new GitException( "Failed to pull changes" );
 			}
 		} catch ( GitAPIException e ) {
-			throw new CommandException( e );
+			throw new GitException( e );
 		}
 	}
 }

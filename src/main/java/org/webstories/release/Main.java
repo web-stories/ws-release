@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.webstories.release.git.CommandException;
+import org.webstories.release.git.GitException;
 import org.webstories.release.git.GitCommands;
 import org.webstories.release.utils.ConfigsStreamReader;
 import org.webstories.release.utils.InputStreamAction;
@@ -32,7 +32,7 @@ public class Main {
 			// TODO
 			
 			logger.info( "All done!" );
-		} catch ( ReleaseException | CommandException e ) {
+		} catch ( ReleaseException | GitException e ) {
 			System.out.println( e.getMessage() );
 		}
 	}
