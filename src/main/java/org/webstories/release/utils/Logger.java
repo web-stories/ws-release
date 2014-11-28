@@ -5,6 +5,6 @@ public class Logger {
 		System.out.println( "RELEASE: " + msg );
 	}
 	public static void error( String msg ) {
-		System.out.println( msg );
+		System.out.println( "RELEASE FAILURE: " + msg );
 	}
 }
