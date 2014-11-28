@@ -10,6 +10,7 @@ public class LineLogOutputStream extends LogOutputStream {
 	@Override
 	protected void processLine( String line, int logLevel ) {
 		lines.add( line );
+		System.out.println( line );
 	}
 	
 	public ArrayList<String> getLines() {
