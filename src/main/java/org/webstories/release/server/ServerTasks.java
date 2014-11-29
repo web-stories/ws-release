@@ -50,11 +50,15 @@ public class ServerTasks {
 			throw new DeploymentException( "The artifact is already deployed" );
 		}
 		
+		// TODO shutdown the server
+		
 		try {
 			FileUtils.cleanDirectory( deploymentsDir.toFile() );
 			Files.copy( artifactPath, deploymentTarget );
 		} catch ( IOException e ) {
 			throw new DeploymentException( e );
 		}
+		
+		// TODO start the server
 	}
 }

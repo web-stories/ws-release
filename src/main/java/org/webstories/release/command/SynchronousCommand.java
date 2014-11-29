@@ -1,4 +1,4 @@
-package org.webstories.release.build;
+package org.webstories.release.command;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,11 +10,11 @@ import org.apache.commons.exec.PumpStreamHandler;
 public class SynchronousCommand {
 	private String name;
 	
-	protected SynchronousCommand( String name ) {
+	public SynchronousCommand( String name ) {
 		this.name = name;
 	}
 	
-	protected class CommandResult {
+	public class CommandResult {
 		private int exitCode;
 		private List<String> lines;
 		private String command;
@@ -39,7 +39,7 @@ public class SynchronousCommand {
 		}
 	}
 	
-	protected CommandResult execute( String... arguments )
+	public CommandResult execute( String... arguments )
 	throws CommandException {
 		CommandLine command = new CommandLine( "cmd" );
 		command.addArgument( "/c" );

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.webstories.release.build.BuildTasks;
-import org.webstories.release.build.CommandException;
+import org.webstories.release.build.BuildException;
 import org.webstories.release.git.GitCommands;
 import org.webstories.release.git.GitException;
 import org.webstories.release.server.DeploymentException;
@@ -64,7 +64,7 @@ public class Main {
 			}
 			
 			Logger.task( "All done!" );
-		} catch ( ReleaseException | GitException | CommandException |
+		} catch ( ReleaseException | GitException | BuildException |
 		ArgumentNotFoundException | DeploymentException e ) {
 			Logger.error( e.getMessage() );
 		}

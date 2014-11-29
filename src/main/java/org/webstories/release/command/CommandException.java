@@ -1,7 +1,6 @@
-package org.webstories.release.build;
+package org.webstories.release.command;
 
 import org.webstories.release.utils.ArrayUtils;
-
 
 public class CommandException extends Exception {
 	private static final long serialVersionUID = 1;

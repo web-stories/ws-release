@@ -1,4 +1,4 @@
-package org.webstories.release.build;
+package org.webstories.release.command;
 
 import java.util.ArrayList;
 
