@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import org.apache.commons.io.FileUtils;
 import org.webstories.release.ProjectVersion;
+import org.webstories.release.command.AsynchronousCommand;
 import org.webstories.release.command.CommandException;
 import org.webstories.release.command.SynchronousCommand;
 import org.webstories.release.utils.PathUtils;
@@ -74,6 +75,12 @@ public class ServerTasks {
 			throw new DeploymentException( e );
 		}
 		
-		// TODO start the server
+		try {
+			File cwd = binDir.toFile();
+			AsynchronousCommand standalone = new AsynchronousCommand( "standalone", cwd );
+			standalone.execute();
+		} catch ( CommandException e ) {
+			throw new DeploymentException( e );
+		}
 	}
 }
