@@ -11,6 +11,7 @@ import org.webstories.release.ProjectVersion;
 import org.webstories.release.command.AsynchronousCommand;
 import org.webstories.release.command.CommandException;
 import org.webstories.release.command.SynchronousCommand;
+import org.webstories.release.utils.Logger;
 import org.webstories.release.utils.PathUtils;
 import org.webstories.release.utils.SocketUtils;
 
@@ -51,13 +52,15 @@ public class ServerTasks {
 		Path deploymentsDir = jbossHome.resolve( "standalone/deployments/" );
 		Path binDir = jbossHome.resolve( "bin" );
 		Path deploymentTarget = deploymentsDir.resolve( artifactPath.getFileName() );
+		boolean serverUp = !SocketUtils.isPortAvailable( 80 );
+		boolean alreadyDeployed = Files.exists( deploymentTarget );
 		
-		if ( Files.exists( deploymentTarget ) ) {
-			throw new DeploymentException( "The artifact is already deployed" );
+		if ( serverUp && alreadyDeployed ) {
+			Logger.task( "The artifact '" + deploymentTarget + "' is already deployed and server is up" );
+			return;
 		}
 		
-		// If port 80 is taken, then assume the local server is online
-		if ( !SocketUtils.isPortAvailable( 80 ) ) {
+		if ( serverUp ) {
 			try {
 				File cwd = binDir.toFile();
 				SynchronousCommand jbossCli = new SynchronousCommand( "jboss-cli", cwd );
