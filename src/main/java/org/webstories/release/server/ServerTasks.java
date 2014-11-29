@@ -81,7 +81,7 @@ public class ServerTasks {
 		try {
 			File cwd = binDir.toFile();
 			AsynchronousCommand standalone = new AsynchronousCommand( "standalone", cwd );
-			standalone.execute();
+			standalone.execute( "-b", "0.0.0.0" );
 		} catch ( CommandException e ) {
 			throw new DeploymentException( e );
 		}
