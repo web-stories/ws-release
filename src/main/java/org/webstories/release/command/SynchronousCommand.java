@@ -1,5 +1,6 @@
 package org.webstories.release.command;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -9,9 +10,15 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 public class SynchronousCommand {
 	private String name;
+	private File cwd;
 	
 	public SynchronousCommand( String name ) {
 		this.name = name;
+	}
+	
+	public SynchronousCommand( String name, File cwd ) {
+		this.name = name;
+		this.cwd = cwd;
 	}
 	
 	public class CommandResult {
@@ -51,6 +58,11 @@ public class SynchronousCommand {
 		
 		LineLogOutputStream stdout = new LineLogOutputStream();
 		DefaultExecutor executor = new DefaultExecutor();
+		
+		if ( cwd != null ) {
+			executor.setWorkingDirectory( cwd );
+		}
+		
 		executor.setStreamHandler( new PumpStreamHandler( stdout, System.err, System.in ) );
 		
 		try {
