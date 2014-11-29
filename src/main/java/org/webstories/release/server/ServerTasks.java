@@ -11,6 +11,7 @@ import org.webstories.release.ProjectVersion;
 import org.webstories.release.command.CommandException;
 import org.webstories.release.command.SynchronousCommand;
 import org.webstories.release.utils.PathUtils;
+import org.webstories.release.utils.SocketUtils;
 
 public class ServerTasks {
 	private Path jbossHome;
@@ -54,12 +55,15 @@ public class ServerTasks {
 			throw new DeploymentException( "The artifact is already deployed" );
 		}
 		
-		try {
-			File cwd = binDir.toFile();
-			SynchronousCommand jbossCli = new SynchronousCommand( "jboss-cli", cwd );
-			jbossCli.execute( "--connect", "command=:shutdown" );
-		} catch ( CommandException e ) {
-			throw new DeploymentException( e );
+		// If port 80 is taken, then assume the local server is online
+		if ( !SocketUtils.isPortAvailable( 80 ) ) {
+			try {
+				File cwd = binDir.toFile();
+				SynchronousCommand jbossCli = new SynchronousCommand( "jboss-cli", cwd );
+				jbossCli.execute( "--connect", "command=:shutdown" );
+			} catch ( CommandException e ) {
+				throw new DeploymentException( e );
+			}
 		}
 		
 		try {
