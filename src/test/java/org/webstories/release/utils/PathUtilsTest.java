@@ -23,4 +23,20 @@ public class PathUtilsTest {
 		
 		Assert.assertEquals( expected, actual );
 	}
+	
+	@Test
+	public void should_get_the_full_path_that_starts_with_the_given_prefix() throws IOException {
+		Path directory = Paths.get( "src/test/resources/parent" );
+		Path file = PathUtils.getFileThatStartsWith( "prefixed-", directory );
+		
+		if ( file == null ) {
+			Assert.fail( "method should not return null" );
+			return;
+		}
+		
+		String actual = file.toString();
+		String expected = Paths.get( "src/test/resources/parent/prefixed-file" ).toString();
+		
+		Assert.assertEquals( expected, actual );
+	}
 }

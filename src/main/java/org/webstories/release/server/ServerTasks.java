@@ -29,22 +29,22 @@ public class ServerTasks {
 	public void deploy() throws DeploymentException {
 		String prefix = "WebStories-" + version;
 		Path directory = Paths.get( "target" );
-		Path targetArtifact = null;
+		Path artifactPath = null;
 		
 		try {
-			targetArtifact = PathUtils.getFileThatStartsWith( prefix, directory );
+			artifactPath = PathUtils.getFileThatStartsWith( prefix, directory );
 		} catch ( IOException e ) {
 			throw new DeploymentException( e );
 		}
 		
-		if ( targetArtifact == null ) {
+		if ( artifactPath == null ) {
 			throw new DeploymentException(
 				"Failed to find the '.war' file to deploy inside the 'target' directory"
 			);
 		}
 		
 		Path deploymentsDir = jbossHome.resolve( "standalone/deployments/" );
-		Path deploymentTarget = deploymentsDir.resolve( targetArtifact );
+		Path deploymentTarget = deploymentsDir.resolve( artifactPath.getFileName() );
 		
 		if ( Files.exists( deploymentTarget ) ) {
 			throw new DeploymentException( "The artifact is already deployed" );
@@ -52,7 +52,7 @@ public class ServerTasks {
 		
 		try {
 			FileUtils.cleanDirectory( deploymentsDir.toFile() );
-			Files.copy( targetArtifact, deploymentTarget );
+			Files.copy( artifactPath, deploymentTarget );
 		} catch ( IOException e ) {
 			throw new DeploymentException( e );
 		}

@@ -17,7 +17,7 @@ public class PathUtils {
 			for ( Path item : items ) {
 				Path filename = item.getFileName();
 				if ( filename.toString().startsWith( targetPrefix.toString() ) ) {
-					result = filename;
+					result = item;
 				}
 			}
 		}
