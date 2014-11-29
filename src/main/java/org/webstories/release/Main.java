@@ -54,10 +54,7 @@ public class Main {
 				// Until then, the server should not be up when executing the build process, so
 				// the release fails if that happens.
 				if ( !SocketUtils.isPortAvailable( 80 ) ) {
-					Logger.error(
-						"Can't execute build, production server should be offline or in a"
-						+ "different port other than :80"
-					);
+					Logger.error( "Can't execute build, production server should be offline" );
 					return;
 				}
 				
