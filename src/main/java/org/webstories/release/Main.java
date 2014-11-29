@@ -6,8 +6,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-import org.webstories.release.build.BuildTasks;
 import org.webstories.release.build.BuildException;
+import org.webstories.release.build.BuildTasks;
 import org.webstories.release.git.GitCommands;
 import org.webstories.release.git.GitException;
 import org.webstories.release.server.DeploymentException;
@@ -16,6 +16,7 @@ import org.webstories.release.utils.ConfigsStreamReader;
 import org.webstories.release.utils.InputStreamAction;
 import org.webstories.release.utils.InputStreamException;
 import org.webstories.release.utils.Logger;
+import org.webstories.release.utils.SocketUtils;
 
 
 public class Main {
@@ -43,6 +44,22 @@ public class Main {
 			}
 			
 			if ( declaredTasks.contains( "build" ) ) {
+				// FIXME: The maven build uses the port 80 when starting the server with grunt in
+				// the process.
+				// There is a pending issue in 'grunt-java-server' that could make possible to
+				// configure the port via grunt configs, like how it is currently done with
+				// 'grunt-connect' plugin:
+				// https://github.com/FagnerMartinsBrack/grunt-java-server/issues/5
+				// Until then, the server should not be up when executing the build process, so
+				// the release fails if that happens.
+				if ( !SocketUtils.isPortAvailable( 80 ) ) {
+					Logger.error(
+						"Can't execute build, production server should be offline or in a"
+						+ "different port other than :80"
+					);
+					return;
+				}
+				
 				BuildTasks buildTasks = BuildTasks.create();
 				Logger.task( "Executing build..." );
 				buildTasks.doBuild();
