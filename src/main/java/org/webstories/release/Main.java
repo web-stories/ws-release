@@ -44,8 +44,9 @@ public class Main {
 			}
 			
 			if ( declaredTasks.contains( "build" ) ) {
-				// FIXME: The maven build uses the port 80 when starting the server with grunt in
-				// the process.
+				// FIXME: The maven build uses a lot of socket bindings when starting the server
+				// with grunt in the process, it causes conflicts if another server is
+				// started in the same host, even in a different port.
 				// There is a pending issue in 'grunt-java-server' that could make possible to
 				// configure the port via grunt configs, like how it is currently done with
 				// 'grunt-connect' plugin:
