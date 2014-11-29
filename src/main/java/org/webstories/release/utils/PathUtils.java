@@ -16,7 +16,7 @@ public class PathUtils {
 			Path targetPrefix = Paths.get( prefix );
 			for ( Path item : items ) {
 				Path filename = item.getFileName();
-				if ( filename.startsWith( targetPrefix ) ) {
+				if ( filename.toString().startsWith( targetPrefix.toString() ) ) {
 					result = filename;
 				}
 			}
