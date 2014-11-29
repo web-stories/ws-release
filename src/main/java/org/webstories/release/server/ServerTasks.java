@@ -61,7 +61,7 @@ public class ServerTasks {
 	 */
 	public void deploy() throws DeploymentException {
 		if ( isDeployed() ) {
-			throw new DeploymentException( "The project is already deployed" );
+			throw new DeploymentException( "The artifact is already deployed" );
 		}
 	}
 }
