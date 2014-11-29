@@ -1,14 +1,15 @@
 package org.webstories.release;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.webstories.release.build.BuildTasks;
 import org.webstories.release.build.CommandException;
 import org.webstories.release.git.GitCommands;
 import org.webstories.release.git.GitException;
+import org.webstories.release.server.DeploymentException;
 import org.webstories.release.server.ServerTasks;
 import org.webstories.release.utils.ConfigsStreamReader;
 import org.webstories.release.utils.InputStreamAction;
@@ -25,11 +26,16 @@ public class Main {
 				throw new ReleaseException( "'jboss' argument not found" );
 			}
 			
+			if ( !arguments.contains( "version" ) ) {
+				throw new ReleaseException( "'version' argument not found" );
+			}
+			
 			String password = getConfig( "ssh.password" );
 			GitCommands commands = GitCommands.create( password );
 			BuildTasks buildTasks = BuildTasks.create();
 			ServerTasks serverTasks = ServerTasks.create(
-				new File( arguments.getValue( "jboss" ) )
+				Paths.get( arguments.getValue( "jboss" ) ),
+				ProjectVersion.create( arguments.getValue( "version" ) )
 			);
 			
 			Logger.task( "Checking if current branch is 'master'..." );
@@ -43,15 +49,12 @@ public class Main {
 			Logger.task( "Executing build..." );
 			buildTasks.doBuild();
 			
-			if ( !serverTasks.isDeployable() ) {
-				throw new ReleaseException( "The released artifact is not deployable" );
-			}
-			
+			Logger.task( "Deploying artifact..." );
 			serverTasks.deploy();
 			
 			Logger.task( "All done!" );
 		} catch ( ReleaseException | GitException | CommandException |
-		ArgumentNotFoundException e ) {
+		ArgumentNotFoundException | DeploymentException e ) {
 			Logger.error( e.getMessage() );
 		}
 	}

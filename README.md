@@ -34,3 +34,7 @@ $ java -jar release.jar
 #### --jboss="/path"
 
 The root directory path of the JBoss Server where the artifact is going to be deployed into.
+
+#### --version=0.0.0
+
+The version number of the artifact to be deployed.
