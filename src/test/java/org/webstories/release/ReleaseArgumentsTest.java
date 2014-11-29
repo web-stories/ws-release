@@ -2,8 +2,6 @@ package org.webstories.release;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.webstories.release.ArgumentNotFoundException;
-import org.webstories.release.ReleaseArguments;
 
 public class ReleaseArgumentsTest {
 	@Test
@@ -14,6 +12,18 @@ public class ReleaseArgumentsTest {
 		
 		String actual = args.getValue( "jboss" );
 		String expected = "c:/jboss";
+		
+		Assert.assertEquals( expected, actual );
+	}
+	
+	@Test
+	public void should_consider_arguments_that_doesnt_have_prefix_as_task_declaration() {
+		ReleaseArguments args = new ReleaseArguments(new String[] {
+			"deploy"	
+		});
+		
+		String actual = args.getDeclaredTasks().toString();
+		String expected = "[deploy]";
 		
 		Assert.assertEquals( expected, actual );
 	}

@@ -1,5 +1,8 @@
 package org.webstories.release;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.annotation.Nullable;
 
 public class ReleaseArguments {
@@ -28,6 +31,19 @@ public class ReleaseArguments {
 		}
 		
 		return value;
+	}
+	
+	public List<String> getDeclaredTasks() {
+		List<String> result = new ArrayList<String>();
+		for ( String argument : arguments ) {
+			String firstChar = argument.charAt( 0 ) + "";
+			String lastChar = argument.charAt( argument.length() - 1 ) + "";
+			String taskDeclRegex = "[a-zA-Z0-9]";
+			if ( firstChar.matches( taskDeclRegex ) && lastChar.matches( taskDeclRegex ) ) {
+				result.add( argument );
+			}
+		}
+		return result;
 	}
 	
 	public boolean contains( String name ) {

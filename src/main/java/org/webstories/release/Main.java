@@ -3,6 +3,7 @@ package org.webstories.release;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 
 import org.webstories.release.build.BuildTasks;
@@ -20,37 +21,47 @@ import org.webstories.release.utils.Logger;
 public class Main {
 	public static void main( String[] args ) {
 		ReleaseArguments arguments = new ReleaseArguments( args );
+		List<String> declaredTasks = arguments.getDeclaredTasks();
+		
+		// If no task was declared, then execute all of them
+		if ( declaredTasks.isEmpty() ) {
+			declaredTasks.add( "git" );
+			declaredTasks.add( "build" );
+			declaredTasks.add( "deploy" );
+		}
 		
 		try {
-			if ( !arguments.contains( "jboss" ) ) {
-				throw new ReleaseException( "'jboss' argument not found" );
+			if ( declaredTasks.contains( "git" ) ) {
+				String password = getConfig( "ssh.password" );
+				GitCommands gitCommands = GitCommands.create( password );
+				Logger.task( "Checking if current branch is 'master'..." );
+				if( !gitCommands.isBranch( "master" ) ) {
+					throw new ReleaseException( "The current checked out branch should be 'master'" );
+				}
+				Logger.task( "Synchronizing local repository with remotes..." );
+				gitCommands.update();
 			}
 			
-			if ( !arguments.contains( "version" ) ) {
-				throw new ReleaseException( "'version' argument not found" );
+			if ( declaredTasks.contains( "build" ) ) {
+				BuildTasks buildTasks = BuildTasks.create();
+				Logger.task( "Executing build..." );
+				buildTasks.doBuild();
 			}
 			
-			String password = getConfig( "ssh.password" );
-			GitCommands commands = GitCommands.create( password );
-			BuildTasks buildTasks = BuildTasks.create();
-			ServerTasks serverTasks = ServerTasks.create(
-				Paths.get( arguments.getValue( "jboss" ) ),
-				ProjectVersion.create( arguments.getValue( "version" ) )
-			);
-			
-			Logger.task( "Checking if current branch is 'master'..." );
-			if( !commands.isBranch( "master" ) ) {
-				throw new ReleaseException( "The current checked out branch should be 'master'" );
+			if ( declaredTasks.contains( "deploy" ) ) {
+				if ( !arguments.contains( "jboss" ) ) {
+					throw new ReleaseException( "'jboss' argument not found" );
+				}
+				if ( !arguments.contains( "version" ) ) {
+					throw new ReleaseException( "'version' argument not found" );
+				}
+				ServerTasks serverTasks = ServerTasks.create(
+					Paths.get( arguments.getValue( "jboss" ) ),
+					ProjectVersion.create( arguments.getValue( "version" ) )
+				);
+				Logger.task( "Deploying artifact..." );
+				serverTasks.deploy();
 			}
-			
-			Logger.task( "Synchronizing local repository with remotes..." );
-			commands.update();
-			
-			Logger.task( "Executing build..." );
-			buildTasks.doBuild();
-			
-			Logger.task( "Deploying artifact..." );
-			serverTasks.deploy();
 			
 			Logger.task( "All done!" );
 		} catch ( ReleaseException | GitException | CommandException |
