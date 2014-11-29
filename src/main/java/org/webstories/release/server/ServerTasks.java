@@ -60,6 +60,7 @@ public class ServerTasks {
 			try {
 				File cwd = binDir.toFile();
 				SynchronousCommand jbossCli = new SynchronousCommand( "jboss-cli", cwd );
+				jbossCli.addEnv( "NOPAUSE", "true" );
 				jbossCli.execute( "--connect", "command=:shutdown" );
 			} catch ( CommandException e ) {
 				throw new DeploymentException( e );
