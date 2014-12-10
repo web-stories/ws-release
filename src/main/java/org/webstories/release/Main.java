@@ -16,7 +16,6 @@ import org.webstories.release.utils.ConfigsStreamReader;
 import org.webstories.release.utils.InputStreamAction;
 import org.webstories.release.utils.InputStreamException;
 import org.webstories.release.utils.Logger;
-import org.webstories.release.utils.SocketUtils;
 
 
 public class Main {
@@ -44,20 +43,6 @@ public class Main {
 			}
 			
 			if ( declaredTasks.contains( "build" ) ) {
-				// FIXME: The maven build uses a lot of socket bindings when starting the server
-				// with grunt in the process, it causes conflicts if another server is
-				// started in the same host, even in a different port.
-				// There is a pending issue in 'grunt-java-server' that could make possible to
-				// configure the port via grunt configs, like how it is currently done with
-				// 'grunt-connect' plugin:
-				// https://github.com/FagnerMartinsBrack/grunt-java-server/issues/5
-				// Until then, the server should not be up when executing the build process, so
-				// the release fails if that happens.
-				if ( !SocketUtils.isPortAvailable( 80 ) ) {
-					Logger.error( "Can't execute build, production server should be offline" );
-					return;
-				}
-				
 				BuildTasks buildTasks = BuildTasks.create();
 				Logger.task( "Executing build..." );
 				buildTasks.doBuild();
