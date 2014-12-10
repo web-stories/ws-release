@@ -15,6 +15,7 @@ public class BuildTasks {
 	
 	public void doBuild() throws BuildException {
 		try {
+			mvn.execute( "clean" );
 			mvn.execute( "install" );
 		} catch ( CommandException e ) {
 			throw new BuildException( e );
