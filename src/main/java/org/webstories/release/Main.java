@@ -6,16 +6,19 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-import org.webstories.release.build.BuildException;
-import org.webstories.release.build.BuildTasks;
-import org.webstories.release.git.GitCommands;
-import org.webstories.release.git.GitException;
-import org.webstories.release.server.DeploymentException;
-import org.webstories.release.server.ServerTasks;
-import org.webstories.release.utils.ConfigsStreamReader;
-import org.webstories.release.utils.InputStreamAction;
-import org.webstories.release.utils.InputStreamException;
+import org.webstories.release.server.JBossServerTasks;
 import org.webstories.release.utils.Logger;
+
+import com.fagnerbrack.release.ArgumentNotFoundException;
+import com.fagnerbrack.release.ProjectVersion;
+import com.fagnerbrack.release.ReleaseArguments;
+import com.fagnerbrack.release.ReleaseException;
+import com.fagnerbrack.release.build.BuildException;
+import com.fagnerbrack.release.build.BuildTasks;
+import com.fagnerbrack.release.build.MavenBuildTasks;
+import com.fagnerbrack.release.git.GitCommands;
+import com.fagnerbrack.release.git.GitException;
+import com.fagnerbrack.release.server.DeploymentException;
 
 
 public class Main {
@@ -43,9 +46,9 @@ public class Main {
 			}
 			
 			if ( declaredTasks.contains( "build" ) ) {
-				BuildTasks buildTasks = BuildTasks.create();
+				BuildTasks buildTasks = new MavenBuildTasks();
 				Logger.task( "Executing build..." );
-				buildTasks.doBuild();
+				buildTasks.executeFullBuild();
 			}
 			
 			if ( declaredTasks.contains( "deploy" ) ) {
@@ -55,7 +58,7 @@ public class Main {
 				if ( !arguments.contains( "version" ) ) {
 					throw new ReleaseException( "'version' argument not found" );
 				}
-				ServerTasks serverTasks = ServerTasks.create(
+				JBossServerTasks serverTasks = JBossServerTasks.create(
 					Paths.get( arguments.getValue( "jboss" ) ),
 					ProjectVersion.create( arguments.getValue( "version" ) )
 				);
@@ -64,27 +67,32 @@ public class Main {
 			}
 			
 			Logger.task( "All done!" );
-		} catch ( ReleaseException | GitException | BuildException |
-		ArgumentNotFoundException | DeploymentException e ) {
+		} catch ( ReleaseException | GitException | BuildException | ArgumentNotFoundException |
+		DeploymentException e ) {
 			Logger.error( e.getMessage() );
 		}
 	}
 	
 	private static String getConfig( String key ) throws ReleaseException {
 		final Properties properties = new Properties();
-		ConfigsStreamReader configsReader = new ConfigsStreamReader();
+		InputStream configsStream = Main.class.getResourceAsStream( "/configs.properties" );
+		
+		if ( configsStream == null ) {
+			throw new ReleaseException( "config file not found" );
+		}
 		
 		try {
-			configsReader.read(new InputStreamAction() {
-				@Override
-				public void run( InputStream input ) throws IOException {
-					properties.load( input );
-				}
-			});
-		} catch ( InputStreamException e ) {
+			properties.load( configsStream );
+		} catch ( IOException e ) {
 			throw new ReleaseException( e );
 		}
 		
-		return properties.getProperty( key );
+		String result = properties.getProperty( key );
+		
+		if ( result == null ) {
+			throw new ReleaseException( "config not found: " + key );
+		}
+		
+		return result;
 	}
 }
