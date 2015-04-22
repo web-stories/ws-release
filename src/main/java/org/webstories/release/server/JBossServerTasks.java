@@ -67,7 +67,7 @@ public class JBossServerTasks implements ServerTasks {
 		if ( serverUp ) {
 			try {
 				File cwd = binDir.toFile();
-				SyncCommand jbossCli = new SyncCommand( "jboss-cli", cwd );
+				SyncCommand jbossCli = new SyncCommand( "jboss-cli.sh", cwd );
 				jbossCli.addEnv( "NOPAUSE", "true" );
 				jbossCli.execute( "--connect", "command=:shutdown" );
 			} catch ( CommandException e ) {
@@ -84,7 +84,7 @@ public class JBossServerTasks implements ServerTasks {
 		
 		try {
 			File cwd = binDir.toFile();
-			AsyncCommand standalone = new AsyncCommand( "standalone", cwd );
+			AsyncCommand standalone = new AsyncCommand( "standalone.sh", cwd );
 			standalone.execute( "-b", "0.0.0.0" );
 		} catch ( CommandException e ) {
 			throw new DeploymentException( e );
