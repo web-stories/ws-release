@@ -39,4 +39,20 @@ public class PathUtilsTest {
 		
 		Assert.assertEquals( expected, actual );
 	}
+	
+	@Test
+	public void should_get_the_file_not_the_directory() throws IOException {
+		Path directory = Paths.get( "src/test/resources/directory-and-file" );
+		Path file = PathUtils.getFileThatStartsWith( "WebStories-", directory );
+		
+		if ( file == null ) {
+			Assert.fail( "method should not return null" );
+			return;
+		}
+		
+		String actual = file.toString();
+		String expected = Paths.get( "src/test/resources/directory-and-file/WebStories-hash.war" ).toString();
+		
+		Assert.assertEquals( expected, actual );
+	}
 }
