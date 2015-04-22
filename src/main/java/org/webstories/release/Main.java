@@ -48,7 +48,7 @@ public class Main {
 			if ( declaredTasks.contains( "build" ) ) {
 				BuildTasks buildTasks = new MavenBuildTasks();
 				Logger.task( "Executing build..." );
-				buildTasks.executeFullBuild();
+				buildTasks.executeFullBuild( "-P", "prod", "-Dmaven.test.skip=true" );
 			}
 			
 			if ( declaredTasks.contains( "deploy" ) ) {
