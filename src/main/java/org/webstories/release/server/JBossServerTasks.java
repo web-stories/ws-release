@@ -59,6 +59,9 @@ public class JBossServerTasks implements ServerTasks {
 		boolean serverUp = !SocketUtils.isPortAvailable( 80 );
 		boolean alreadyDeployed = Files.exists( deploymentTarget );
 		
+		Logger.task( "Checking if server is up: " + serverUp );
+		Logger.task( "Checking if deployment exists: " + alreadyDeployed + "(" + deploymentTarget.toAbsolutePath() + ")" );
+		
 		if ( serverUp && alreadyDeployed ) {
 			Logger.task( "The artifact '" + deploymentTarget + "' is already deployed and server is up" );
 			return;
@@ -76,7 +79,9 @@ public class JBossServerTasks implements ServerTasks {
 		}
 		
 		try {
+			Logger.task( "Cleaning directory: " + deploymentsDir.toAbsolutePath() );
 			FileUtils.cleanDirectory( deploymentsDir.toFile() );
+			Logger.task( "Copying generated artifact: " + artifactPath.toAbsolutePath() );
 			Files.copy( artifactPath, deploymentTarget );
 		} catch ( IOException e ) {
 			throw new DeploymentException( e );
