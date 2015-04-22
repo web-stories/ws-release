@@ -15,10 +15,14 @@ public class PathUtils {
 		try ( DirectoryStream<Path> items = Files.newDirectoryStream( directory ) ) {
 			Path targetPrefix = Paths.get( prefix );
 			for ( Path item : items ) {
-				Path filename = item.getFileName();
-				if ( filename.toString().startsWith( targetPrefix.toString() ) ) {
-					result = item;
+				if ( Files.isDirectory( item ) ) {
+					continue;
 				}
+				Path filename = item.getFileName();
+				if ( !filename.toString().startsWith( targetPrefix.toString() ) ) {
+					continue;
+				}
+				return item;
 			}
 		}
 		return result;
